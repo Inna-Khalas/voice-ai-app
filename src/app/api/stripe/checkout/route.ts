@@ -26,7 +26,7 @@ export async function POST() {
           product_data: {
             name: 'Voice to Text Premium',
           },
-          unit_amount: 500, // $5.00
+          unit_amount: 500,
         },
         quantity: 1,
       },

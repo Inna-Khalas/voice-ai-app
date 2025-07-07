@@ -2,12 +2,10 @@ import { prisma } from '@/lib/db';
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-// Ініціалізація Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-06-30.basil',
 });
 
-// Stripe Webhook обробник
 export async function POST(req: NextRequest) {
   const sig = req.headers.get('stripe-signature');
   const body = await req.text();
@@ -15,7 +13,6 @@ export async function POST(req: NextRequest) {
   let event: Stripe.Event;
 
   try {
-    // Перевірка підпису Stripe Webhook
     event = stripe.webhooks.constructEvent(
       body,
       sig!,
