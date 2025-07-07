@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
-import path from 'path';
-import { randomUUID } from 'crypto';
-
 import { prisma } from '@/lib/db';
 import syncUser from '@/lib/syncUser';
+import cloudinary from '@/lib/cloudinari';
 
 export async function POST(req: Request) {
   const user = await syncUser();
@@ -35,18 +32,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
   }
 
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+  // Преобразуем файл в base64 для загрузки в Cloudinary
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  const base64 = buffer.toString('base64');
+  const dataUri = `data:${file.type};base64,${base64}`;
 
-  const fileName = `${randomUUID()}-${file.name}`;
-  const filePath = path.join(process.cwd(), 'public', 'uploads', fileName);
-
-  await writeFile(filePath, buffer);
+  let uploadResult;
+  try {
+    uploadResult = await cloudinary.uploader.upload(dataUri, {
+      resource_type: 'auto', // для аудио, видео, картинок и др.
+      use_filename: true,
+      unique_filename: false,
+      overwrite: false,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { message: 'Cloudinary upload failed', error: (error as Error).message },
+      { status: 500 },
+    );
+  }
 
   const voice = await prisma.voice.create({
     data: {
       title,
-      audioUrl: `/uploads/${fileName}`,
+      audioUrl: uploadResult.secure_url,
       user: {
         connect: {
           id: user.id,
