@@ -18,6 +18,7 @@ export default function UpgradeButton() {
       }
     } catch (error) {
       toast.error('Щось пішло не так');
+      console.log(error);
     }
   };
 

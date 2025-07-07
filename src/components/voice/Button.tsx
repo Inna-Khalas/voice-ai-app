@@ -23,8 +23,9 @@ export function TranscribeButton({ id }: { id: string }) {
       }
       toast.success('done!');
       location.reload();
-    } catch (err: any) {
-      toast.error(err.message || 'Невідома помилка');
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Невідома помилка';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
