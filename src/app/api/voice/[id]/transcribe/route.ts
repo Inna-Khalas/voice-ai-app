@@ -1,19 +1,23 @@
 import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/db';
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
 import { FormData } from 'undici';
 
-export async function POST(_: Request, { params }: { params: { id: string } }) {
-  console.log('[DEBUG] Розпізнавання голосу запущено для ID:', params.id);
+export async function POST(
+  req: NextRequest,
+  context: { params: { id: string } },
+) {
+  const { id } = context.params;
+  console.log('[DEBUG] Розпізнавання голосу запущено для ID:', id);
 
   const { userId } = await auth();
   if (!userId)
     return NextResponse.json({ message: 'Not authorized' }, { status: 401 });
 
   const voice = await prisma.voice.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { user: true },
   });
 
@@ -54,7 +58,7 @@ export async function POST(_: Request, { params }: { params: { id: string } }) {
   }
 
   const updated = await prisma.voice.update({
-    where: { id: voice.id },
+    where: { id },
     data: { text },
   });
 
