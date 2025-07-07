@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { VoiceSidebar } from '@/components/voice/VoiceSidebar';
 import VoiceForm from '@/components/voice/VoiceForm';
 import UpgradeButton from '@/components/voice/UpgradeButton';
+import { fetchUserStatus, fetchVoices } from '@/lib/api';
 import dynamic from 'next/dynamic';
 
 const UpgradeSuccessModal = dynamic(
   () => import('@/components/voice/UpgradeSuccessModal'),
+  { ssr: false },
 );
 
 interface Voice {
@@ -19,29 +21,13 @@ export default function DashboardPage() {
   const [voices, setVoices] = useState<Voice[]>([]);
   const [isPremium, setIsPremium] = useState(false);
 
-  const fetchVoices = async () => {
-    try {
-      const res = await fetch('/api/voice/list');
-      const data = await res.json();
-      setVoices(data.voices);
-    } catch (err) {
-      console.error('Failed to fetch voices', err);
-    }
-  };
-
-  const fetchUserStatus = async () => {
-    try {
-      const res = await fetch('/api/user');
-      const data = await res.json();
-      setIsPremium(data.isPremium);
-    } catch (err) {
-      console.error('Failed to fetch user status', err);
-    }
-  };
-
   useEffect(() => {
-    fetchVoices();
-    fetchUserStatus();
+    fetchVoices()
+      .then(setVoices)
+      .catch((err) => console.error(err));
+    fetchUserStatus()
+      .then(setIsPremium)
+      .catch((err) => console.error(err));
   }, []);
 
   return (
