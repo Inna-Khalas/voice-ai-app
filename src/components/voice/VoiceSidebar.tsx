@@ -15,7 +15,6 @@ export function VoiceSidebar({ voices, isPremium }: VoiceSidebarProps) {
         href={`/dashboard/voice/${voice.id}`}
         className="flex items-center gap-3 px-4 py-2 rounded-lg transition hover:bg-white/20 border border-transparent hover:border-white/30"
       >
-        {' '}
         <Headphones className="w-5 h-5 text-white/70" />
         <span className="truncate">{voice.title || 'Без назви'}</span>
       </Link>

@@ -45,7 +45,7 @@ export default async function Page({ params }: any) {
 
         <audio controls className="w-full rounded">
           <source src={voice.audioUrl} type="audio/mpeg" />
-          Your browser does not support audio playback.{' '}
+          Your browser does not support audio playback.
         </audio>
 
         <div>

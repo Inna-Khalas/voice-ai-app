@@ -26,7 +26,7 @@ export default function PremiumModal({ onClose }: { onClose: () => void }) {
       <div className="bg-white text-black p-6 rounded-xl max-w-sm shadow-2xl">
         <h2 className="text-xl font-bold text-red-600 mb-3">Ліміт досягнуто</h2>
         <p className="mb-4">
-          Ви використали всі безкоштовні записи. Отримайте{' '}
+          Ви використали всі безкоштовні записи. Отримайте
           <strong>Premium</strong>, щоб створювати необмежену кількість записів.
         </p>
         <div className="flex gap-2">
