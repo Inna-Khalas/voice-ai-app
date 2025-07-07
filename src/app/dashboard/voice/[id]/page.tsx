@@ -5,13 +5,7 @@ import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default async function Page({ params }: PageProps) {
+export default async function Page({ params }: any) {
   const { userId } = await auth();
   if (!userId) return notFound();
 
