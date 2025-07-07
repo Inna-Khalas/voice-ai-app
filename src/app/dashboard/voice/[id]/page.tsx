@@ -5,13 +5,13 @@ import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
-interface Props {
+interface PageProps {
   params: {
     id: string;
   };
 }
 
-export default async function Page({ params }: Props) {
+export default async function Page({ params }: PageProps) {
   const { userId } = await auth();
   if (!userId) return notFound();
 
