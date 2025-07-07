@@ -3,6 +3,8 @@ import Stripe from 'stripe';
 import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/db';
 
+export const runtime = 'nodejs';
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-06-30.basil',
 });
