@@ -5,10 +5,13 @@ import path from 'path';
 import fs from 'fs/promises';
 import { FormData } from 'undici';
 
-export async function POST(
-  req: NextRequest,
-  context: { params: { id: string } },
-) {
+type Params = {
+  params: {
+    id: string;
+  };
+};
+
+export async function POST(req: NextRequest, context: Params) {
   const { id } = context.params;
   console.log('[DEBUG] Розпізнавання голосу запущено для ID:', id);
 
