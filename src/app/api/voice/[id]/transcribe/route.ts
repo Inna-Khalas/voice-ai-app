@@ -7,7 +7,6 @@ import { FormData } from 'undici';
 
 export async function POST(req: NextRequest, context: any) {
   const { id } = context.params;
-  console.log('[DEBUG] Розпізнавання голосу запущено для ID:', id);
 
   const { userId } = await auth();
   if (!userId)
@@ -23,7 +22,6 @@ export async function POST(req: NextRequest, context: any) {
   }
 
   const filePath = path.join(process.cwd(), 'public', voice.audioUrl);
-  console.log('[DEBUG] Шлях до файлу:', filePath);
 
   const fileBuffer = await fs.readFile(filePath);
 
@@ -43,7 +41,6 @@ export async function POST(req: NextRequest, context: any) {
   );
 
   const data = await openaiRes.json();
-  console.log('[DEBUG] Відповідь OpenAI:', data);
 
   const text = data.text;
 

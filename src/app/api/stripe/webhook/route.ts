@@ -25,13 +25,9 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  console.log('📦 Stripe подія:', event.type);
-
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const clerkId = session.metadata?.clerkId;
-
-    console.log('✅ Оплата пройшла. Clerk ID з метаданих:', clerkId);
 
     if (clerkId) {
       try {
