@@ -22,6 +22,8 @@ const eslintConfig = [
       '@typescript-eslint/no-this-alias': 'off',
       '@typescript-eslint/no-empty-interface': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-unsafe-function-type': 'off',
+      '@typescript-eslint/no-wrapper-object-types': 'off',
     },
   },
 ];
