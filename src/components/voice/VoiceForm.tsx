@@ -3,18 +3,17 @@
 import { useState, useRef } from 'react';
 import { toast } from 'sonner';
 import PremiumModal from './PremiumModal';
+import { useRouter } from 'next/navigation';
 
-interface Props {
-  onUploadSuccess?: () => void;
-}
-
-export default function VoiceForm({ onUploadSuccess }: Props) {
+export default function VoiceForm() {
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [showPremiumModal, setShowPremiumModal] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,7 +51,7 @@ export default function VoiceForm({ onUploadSuccess }: Props) {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
-      onUploadSuccess?.();
+      router.refresh();
     }
     setLoading(false);
   };

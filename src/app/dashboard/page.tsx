@@ -1,52 +1,45 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { VoiceSidebar } from '@/components/voice/VoiceSidebar';
+import { useEffect, useMemo, useState } from 'react';
 import VoiceForm from '@/components/voice/VoiceForm';
 import UpgradeButton from '@/components/voice/UpgradeButton';
-import { fetchUserStatus, fetchVoices } from '@/lib/api';
 import dynamic from 'next/dynamic';
+import { fetchUserStatus } from '@/lib/api';
 
 const UpgradeSuccessModal = dynamic(
   () => import('@/components/voice/UpgradeSuccessModal'),
   { ssr: false },
 );
 
-interface Voice {
-  id: string;
-  title: string | null;
-}
-
 export default function DashboardPage() {
-  const [voices, setVoices] = useState<Voice[]>([]);
   const [isPremium, setIsPremium] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchVoices()
-      .then(setVoices)
-      .catch((err) => console.error(err));
     fetchUserStatus()
       .then(setIsPremium)
-      .catch((err) => console.error(err));
+      .finally(() => setLoading(false));
   }, []);
 
+  const upgradeButton = useMemo(() => {
+    if (loading || isPremium) return null;
+
+    return (
+      <div className="mt-6">
+        <UpgradeButton />
+      </div>
+    );
+  }, [isPremium, loading]);
+
   return (
-    <main className="grid grid-cols-[260px_1fr] min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-red-400 text-white">
-      <VoiceSidebar voices={voices} isPremium={isPremium} />
+    <section className="p-6 m-6">
+      <h1 className="text-3xl font-bold mb-6">New entry</h1>
 
-      <section className="p-6 m-6">
-        <h1 className="text-3xl font-bold mb-6">New entry</h1>
+      <VoiceForm  />
 
-        <VoiceForm onUploadSuccess={fetchVoices} />
+      {upgradeButton}
 
-        {!isPremium && (
-          <div className="mt-6">
-            <UpgradeButton />
-          </div>
-        )}
-
-        <UpgradeSuccessModal />
-      </section>
-    </main>
+      <UpgradeSuccessModal />
+    </section>
   );
 }
