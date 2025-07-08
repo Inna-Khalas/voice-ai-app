@@ -21,7 +21,7 @@ export default async function DashboardLayout({
     select: { premium: true },
   });
 
-  if (!user) return notFound();
+  if (!user) return <div>Authentication error: no user</div>;
 
   return (
     <main className="grid grid-cols-[260px_1fr] min-h-screen">
