@@ -1,6 +1,5 @@
-import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/db';
-import { notFound } from 'next/navigation';
+import syncUser from '@/lib/syncUser';
 import VoiceSidebarWrapper from '@/components/voice/VoiceSidebarWrapper';
 
 export default async function DashboardLayout({
@@ -8,20 +7,17 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = await auth();
-  if (!userId) return <div>Authentication error: no user</div>;
+  const user = await syncUser();
+
+  if (!user) {
+    return <div>Authentication error: no user</div>;
+  }
+
   const voices = await prisma.voice.findMany({
-    where: { user: { clerkId: userId } },
+    where: { user: { clerkId: user.clerkId } },
     orderBy: { createdAt: 'desc' },
     select: { id: true, title: true },
   });
-
-  const user = await prisma.user.findUnique({
-    where: { clerkId: userId },
-    select: { premium: true },
-  });
-
-  if (!user) return <div>Authentication error: no user</div>;
 
   return (
     <main className="grid grid-cols-[260px_1fr] min-h-screen">

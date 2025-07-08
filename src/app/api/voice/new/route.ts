@@ -32,7 +32,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'Invalid input' }, { status: 400 });
   }
 
-  // Преобразуем файл в base64 для загрузки в Cloudinary
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const base64 = buffer.toString('base64');
@@ -41,7 +40,7 @@ export async function POST(req: Request) {
   let uploadResult;
   try {
     uploadResult = await cloudinary.uploader.upload(dataUri, {
-      resource_type: 'auto', // для аудио, видео, картинок и др.
+      resource_type: 'auto',
       use_filename: true,
       unique_filename: false,
       overwrite: false,
