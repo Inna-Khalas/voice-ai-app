@@ -9,8 +9,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { userId } = await auth();
-  if (!userId) return notFound();
-
+  if (!userId) return <div>Authentication error: no user</div>;
   const voices = await prisma.voice.findMany({
     where: { user: { clerkId: userId } },
     orderBy: { createdAt: 'desc' },
